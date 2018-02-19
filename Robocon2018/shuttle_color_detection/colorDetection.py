@@ -46,5 +46,8 @@ RED:
 BLUE:
     lower_blue = np.array([100,50,30])
     upper_blue = np.array([120,255,255])
+GOLDEN:
+    lower_golden = np.array([50,0,0])
+    upper_golden = np.array([80,150,150])
     
 """

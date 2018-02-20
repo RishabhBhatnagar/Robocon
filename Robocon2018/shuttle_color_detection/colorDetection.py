@@ -1,7 +1,17 @@
 import cv2
 import numpy as np
 import os
+import Rpi.GPIO as GPIO
+
 cap = cv2.VideoCapture(1)
+
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(4,GPIO.OUT)
+GPIO.setup(17,GPIO.OUT)
+
 
 def threshImg(img, lower, upper, color = "some_color", showImg = 1):
     lower_color = np.array(lower)
@@ -36,13 +46,21 @@ while True:
     r = cv2.countNonZero(red_img)
     g = cv2.countNonZero(golden_img)
     b = cv2.countNonZero(blue_img)
+    
     dominant_color = max(r, g, b)
+
     if dominant_color == r :
         print("Red")
+        output = (0, 1)
     if dominant_color == g :
         print("Golden")
+        output = (1, 0)
     if dominant_color == b :
         print("Blue")
+        output = (1, 1)
+
+    GPIO.output(4,output[0])
+    GPIO.output(17,output[1])
     
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) == 27:

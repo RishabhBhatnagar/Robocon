@@ -19,18 +19,30 @@ while True:
     "Writing images to folder : "
     cv2.imwrite(os.path.join("TestImages" , "image" + str(i) + ".png"), frame)
 
-    show = [1, 1, 1, 0]
+    show = [1, 1, 1]
     
     #GOLDEN
     golden_img = threshImg(frame, [10, 40, 120], [35, 240, 250], "Golden", show[0])
 
     #BLUE    Not sure ranges.
-    blue_img = threshImg(frame, [20, 10, 25],
-                                [255, 150, 155], "Blue", show[1])
+    blue_img = threshImg(frame, [100, 100, 50],
+                                [150, 255, 255], "Blue", show[1])
 
     #RED: 
-    red_img = threshImg(frame, [150,150,50],
+    red_img = threshImg(frame, [150,140,0],
                                [180, 255, 255], "Red", show[2])
+
+
+    r = cv2.countNonZero(red_img)
+    g = cv2.countNonZero(golden_img)
+    b = cv2.countNonZero(blue_img)
+    dominant_color = max(r, g, b)
+    if dominant_color == r :
+        print("Red")
+    if dominant_color == g :
+        print("Golden")
+    if dominant_color == b :
+        print("Blue")
     
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) == 27:

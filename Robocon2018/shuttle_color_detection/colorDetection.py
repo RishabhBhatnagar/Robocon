@@ -1,13 +1,13 @@
 import cv2
 import numpy as np
 import os
-import Rpi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 
 GPIO.setup(4,GPIO.OUT)
 GPIO.setup(17,GPIO.OUT)
@@ -21,18 +21,15 @@ def threshImg(img, lower, upper, color = "some_color", showImg = 1):
     if showImg : cv2.imshow(color, res)
     return mask
 
-i = 21000
 while True:
     _, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
-    "Writing images to folder : "
-    cv2.imwrite(os.path.join("TestImages" , "image" + str(i) + ".png"), frame)
-
-    show = [1, 1, 1]
+    show = [1, 1, 1]     # Show frames of g, b, r
     
     #GOLDEN
-    golden_img = threshImg(frame, [10, 40, 120], [35, 240, 250], "Golden", show[0])
+    golden_img = threshImg(frame, [10, 40, 120],
+                                  [35, 240, 250], "Golden", show[0])
 
     #BLUE    Not sure ranges.
     blue_img = threshImg(frame, [100, 100, 50],
@@ -64,20 +61,7 @@ while True:
     
     cv2.imshow("frame", frame)
     if cv2.waitKey(1) == 27:
-        pass
+        break
 
 cv2.destroyAllWindows()
 cap.release()
-
-
-"""
-RED:
-    lower_red = np.array([150,150,50])
-    upper_red = np.array([180, 255, 255])
-BLUE:
-    lower_blue = np.array([100,50,30])
-    upper_blue = np.array([120,255,255])
-
-Not Blue and Golden :
-[(0,0), (0,10 : 160,255), (0, 24 : 221, 255)]
-"""

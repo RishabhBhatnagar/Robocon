@@ -9,8 +9,9 @@ cap = cv2.VideoCapture(0)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(4,GPIO.OUT)
-GPIO.setup(17,GPIO.OUT)
+GPIO.setup(3,GPIO.OUT)
+GPIO.setup(5,GPIO.OUT)
+GPIO.setup(7,GPIO.OUT)
 
 
 def threshImg(img, lower, upper, color = "some_color", showImg = 1):
@@ -21,7 +22,14 @@ def threshImg(img, lower, upper, color = "some_color", showImg = 1):
     if showImg : cv2.imshow(color, res)
     return mask
 
-while True:
+def rpi_output(pin, *args):
+    GPIO.output(pin, GPIO.HIGH)
+    for pins in args :
+        GPIO.output(pins, GPIO.LOW)
+
+number_of_frames = 10
+colors = {"red":0, "blue":0, "green":0}
+while cap.isOpened and number_of_frames:
     _, frame = cap.read()
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
@@ -47,21 +55,26 @@ while True:
     dominant_color = max(r, g, b)
 
     if dominant_color == r :
-        print("Red")
-        output = (0, 1)
+        print("temp_red")
+        colors['red'] = colors.get('red') + 1
     if dominant_color == g :
-        print("Golden")
+        print("temp_golden")
+        colors['golden'] = colors.get('golden') + 1
         output = (1, 0)
     if dominant_color == b :
-        print("Blue")
-        output = (1, 1)
+        print("temp_blue")
+        colors['blue'] = colors.get('blue') + 1
 
-    GPIO.output(4,output[0])
-    GPIO.output(17,output[1])
-    
     cv2.imshow("frame", frame)
+    number_of_frames -= 1
     if cv2.waitKey(1) == 27:
         break
-
+which_color = colors.keys()[colors.values().index(max(colors.values()))]
+if which_color == 'red':
+    rpi_output(3, 5,7)
+elif which_color == 'blue':
+    rpi_output(5, 3,7)
+else :
+    rpi_output(7, 3,5)
 cv2.destroyAllWindows()
 cap.release()

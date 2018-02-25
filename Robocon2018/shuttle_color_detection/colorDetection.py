@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
 import os
+import time
+
 cap = cv2.VideoCapture(1)
+
 
 def threshImg(img, lower, upper, color = "some_color", showImg = 1):
     lower_color = np.array(lower)
@@ -35,22 +38,29 @@ while cap.isOpened():
     r = cv2.countNonZero(red_img)
     g = cv2.countNonZero(golden_img)
     b = cv2.countNonZero(blue_img)
-    
-    dominant_color = max(r, g, b)
 
-    if dominant_color == b :
-        print("temp_blue")
-    
-    elif dominant_color == r :
-        print("temp_red")
-        
-    elif dominant_color == g :
-        print("temp_golden")
-        
-        
+    mx = max([r,g,b])
+    mn = min([r,g,b])
+    diff = mx-mn
+    if mx == r : max2 = max([g, b])
+    if mx == g : max2 = max([r, b])
+    if mx == b : max2 = max([r, g])
+
+    if mx == r : print("Red")
+    elif mx == g : print("Golden")
+    elif mx == b : print("Blue")
+
+    if max2 == r : print("Clash with RED")
+    if max2 == g : print("Clash with GOLDEN")
+    if max2 == b : print("Clash with BLUE")
+    print(r,g,b)
+    if mx == 0 : print("Division by zero Error.")
+    else : print("Difference in pixels", 100*(mx-max2)/mx)
+    number_of_frames -= 1
+
+    time.sleep(0.08)
 
     cv2.imshow("frame", frame)
-    number_of_frames -= 1
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 cv2.destroyAllWindows()

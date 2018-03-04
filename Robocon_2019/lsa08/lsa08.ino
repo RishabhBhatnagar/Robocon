@@ -14,6 +14,11 @@
 #define m4p2 6
 #define pwm4 9
 
+#define motor1_base_speed 70
+#define motor2_base_speed 70
+#define motor3_base_speed 70
+#define motor4_base_speed 70
+
 void setup(){
   Serial.begin(9600);
   
@@ -89,9 +94,9 @@ void up(int left_pwm, int right_pwm){
 void pid_tuning(int current_position, int set_point, int kp, int kd, int previous_error){
   int error = current_position - set_point;
   int speed_change = kp*error + kd*(error - previous_error);
+  return speed_change;
 }
 void loop(){
     //PID for lsa08 connected on side1 ie forward.
     //left motor is 4 and right motor is 2.
-    
 }

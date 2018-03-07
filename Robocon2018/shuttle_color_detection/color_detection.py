@@ -114,5 +114,9 @@ while True:
 
     cv2.imshow("frame", frame)
 
+    #Breaking while loop and close all windows on q typed.
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+
 cv2.destroyAllWindows()
 cap.release()

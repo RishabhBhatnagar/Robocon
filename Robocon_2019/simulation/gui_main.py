@@ -2,6 +2,7 @@ import tkinter
 import dimensions
 import bot_structure
 import time
+from random import randint as random
 def mv(window, bot_rect):
     window.canvas.move(bot_rect, 1, 0)
 class gui :
@@ -15,16 +16,17 @@ root.geometry(str(dimensions.root_x)+"x"+str(dimensions.root_y))
 
 window = gui(root)
 
-bot = bot_structure.object('rectangle', dimensions.no_of_wheels, 
+bot = bot_structure.object('line', dimensions.no_of_wheels, 
                                         dimensions.bot_width, 
                                         dimensions.bot_height, 
                                         dimensions.x_offset,
-                                        dimensions.y_offset)
+                                        dimensions.y_offset, 
+                                        dimensions.radius)
 bot_rect = bot.draw_rect(window.canvas)
-for i in range(100):
-    time.sleep(0.01)
-    #window.canvas.move(bot_rect, 0, 1)
-    bot.update_pos(bot_rect, window.canvas, 1, 1)
-    #window.canvas.after(100, mv(window, bot_rect))
+sign = -1
+x = random(-1, 1)
+for i in range(10000):
+    time.sleep(1/dimensions.speed)
+    bot_rect = bot.mv_bot(bot_rect, window.canvas, x, 1, x, 1)
     root.update()
 root.mainloop()

@@ -7,7 +7,7 @@ def mv(window, bot_rect):
 class gui :
     def __init__(self, root):
         self.root = root
-        self.canvas = tkinter.Canvas(self.root)
+        self.canvas = tkinter.Canvas(self.root, width = dimensions.root_x, height = dimensions.root_y)
         self.canvas.pack()
 
 root = tkinter.Tk()
@@ -23,7 +23,8 @@ bot = bot_structure.object('rectangle', dimensions.no_of_wheels,
 bot_rect = bot.draw_rect(window.canvas)
 for i in range(100):
     time.sleep(0.01)
-    window.canvas.move(bot_rect, 0, 1)
+    #window.canvas.move(bot_rect, 0, 1)
+    bot.update_pos(bot_rect, window.canvas, 1, 1)
     #window.canvas.after(100, mv(window, bot_rect))
     root.update()
 root.mainloop()
